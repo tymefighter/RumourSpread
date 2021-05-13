@@ -8,6 +8,7 @@ class Graph:
     def add_edge(self, u, v):
 
         self.adj_list[u].append(v)
+        self.adj_list[v].append(u)
 
     def add_node(self):
 
