@@ -16,9 +16,7 @@ class Graph:
     def compute_degree_distribution(self):
 
         deg_list = self.compute_degrees()
-
-        n = len(deg_list)
-        deg_dist = [0] * n
+        deg_dist = [0] * (self.n)
 
         for deg in deg_list:
             deg_dist[deg] += 1
