@@ -20,12 +20,15 @@ def generate_scale_free(n, init_num_nodes, num_edges_per_step):
     deg_list[:init_num_nodes] = 1
 
     for i in range(init_num_nodes, n):
-        deg_prob = deg_list[:i]
+        deg_prob = deg_list[:i].astype(np.float32)
         deg_prob /= deg_prob.sum()
 
         verts = np.random.choice(i, num_edges_per_step, False, deg_prob)
 
         for j in verts:
             graph.add_edge(i, j)
+            deg_list[j] += 1
+
+        deg_list[i] += num_edges_per_step
 
     return graph
