@@ -13,7 +13,7 @@ class Graph:
 
         return [len(self.adj_list[i]) for i in range(self.n)]
 
-    def compute_distribution(self):
+    def compute_degree_distribution(self):
 
         deg_list = self.compute_degrees()
 
