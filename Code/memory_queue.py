@@ -11,6 +11,18 @@ class MemoryQueue:
         self.size = 0
         self.freq_dict = dict()
 
+    def __len__(self):
+
+        return self.size
+
+    def is_empty(self):
+
+        return self.size == 0
+
+    def get_freq_dict(self):
+
+        return self.freq_dict
+
     def insert(self, x):
 
         if self.size == self.capacity:
