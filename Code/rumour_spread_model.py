@@ -83,7 +83,7 @@ class RumourSpreadModel:
     def simulate(self, info_propagators, time_steps, callback_list):
 
         self.inject_info(info_propagators)
-        for t in range(time_steps):
+        for _ in range(time_steps):
             self.simulate_step()
 
             for callback in callback_list:
