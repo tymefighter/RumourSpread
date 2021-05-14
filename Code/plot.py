@@ -24,3 +24,8 @@ def plot_range_of_info_spread(bit_counts):
 
     sns.heatmap(bit_count_df)
     plt.show()
+
+
+def plot_opinion_fragmentation(opinion_freq):
+
+    plot_range_of_info_spread(opinion_freq)
