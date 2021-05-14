@@ -80,11 +80,22 @@ class RumourSpreadModel:
             )[0] == True:
                 self.nodes_memory[node].insert(buffer_info[node])
 
+    def inject_info(self, info_propagators):
+        """
+        Args : 
+        new_info : python dictionary
+        """
+
+        for node, info in info_propagators.items():
+            self.nodes_memory[node].insert(info)
                 
     def simulate_step(self):
-        
-        
-    def simulate(self, time_steps):
 
+        distorted_info = self.get_distorted_info()
+        self.update_node_memory(distorted_info)
+        
+    def simulate(self, info_propagators, time_steps):
+
+        self.inject_info(info_propagators)
         for t in range(time_steps):
             self.simulate_step()
