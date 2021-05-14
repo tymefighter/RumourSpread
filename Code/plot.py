@@ -27,15 +27,24 @@ def plot_bit_counts(bit_counts, title):
     plt.show()
 
 def plot_range_of_info_spread(
-    range_of_info_spread, title='Range of Info Spread'
+    range_of_info_spread, 
+    title='Range of Info. Spread'
 ):  
     plot_bit_counts(range_of_info_spread, title)
 
-def plot_opinion_fragmentation(opinion_freq, title='Opinion Frequency'):
-
+def plot_opinion_fragmentation(
+    opinion_freq, 
+    title='Opinion Frequency'
+):
     plot_bit_counts(opinion_freq, title)
 
-def plot_avg_info_entropy(avg_entropy):
+def plot_avg_info_entropy(
+    avg_entropy_list, label_list, 
+    title='Avg. Info. Entropy'
+):
+    for i in range(len(avg_entropy_list)):
+        plt.plot(avg_entropy_list[i], label=label_list[i])
 
-    plt.plot(avg_entropy)
+    plt.title(title)
+    plt.legend()
     plt.show()

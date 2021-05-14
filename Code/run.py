@@ -16,8 +16,13 @@ def main():
     num_nodes = 3000
     num_bits = 5
     timesteps = 100
+    conservation_factor = 1
+    confidence_factor = -3
     
-    rumour_spread = RumourSpreadModel(num_nodes, num_bits, 100, 1, -3)
+    rumour_spread = RumourSpreadModel(
+        num_nodes, num_bits, 100,
+        conservation_factor, confidence_factor
+    )
     result_list = rumour_spread.simulate(
         {0: 0}, timesteps, 
         [RangeOfInformationSpread(
@@ -33,7 +38,10 @@ def main():
 
     plot_range_of_info_spread(result_list[0])
     plot_opinion_fragmentation(result_list[1])
-    plot_avg_info_entropy(result_list[2])
+    plot_avg_info_entropy(
+        [result_list[2]], 
+        [f'k = {conservation_factor}, beta = {confidence_factor}']
+    )
 
 if __name__ == '__main__':
     main()
