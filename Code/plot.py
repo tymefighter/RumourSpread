@@ -29,3 +29,9 @@ def plot_range_of_info_spread(bit_counts):
 def plot_opinion_fragmentation(opinion_freq):
 
     plot_range_of_info_spread(opinion_freq)
+
+    
+def plot_avg_info_entropy(avg_entropy):
+
+    plt.plot(avg_entropy)
+    plt.show()
