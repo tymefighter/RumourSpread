@@ -49,3 +49,22 @@ class OpinionFragmentation(Callback):
                 opinion_freq_list[i] /= self.num_nodes
 
         return self.opinion_freq
+
+class AverageInformationEntropy(Callback):
+
+    def __init__(self, num_nodes, time_steps):
+        super().__init__()
+
+        self.avg_entropy = [0.0] * time_steps
+        self.num_nodes = num_nodes
+        
+    def call_after_step(self, rumour_spread: RumourSpreadModel, t: int):
+        
+        for node_memory in rumour_spread.get_nodes_memory():
+            self.avg_entropy[t] += node_memory.compute_entropy()
+
+        self.avg_entropy[t] /= self.num_nodes
+        
+    def get_result(self):
+
+        return self.avg_entropy
