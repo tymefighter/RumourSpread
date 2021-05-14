@@ -20,6 +20,14 @@ class RumourSpreadModel:
             MemoryQueue(node_capacity) for _ in range(num_nodes)
         ]
 
+    def get_graph(self):
+
+        return self.scale_free_graph
+
+    def get_nodes_memory(self):
+
+        return self.nodes_memory
+
     def distort_info(self, x):
 
         bit_pos = randint(0, self.num_bits - 1)
@@ -30,7 +38,7 @@ class RumourSpreadModel:
         distorted_info = []
         for node_memory in self.nodes_memory:
 
-            if len(node_memory.deque) <= 0:
+            if node_memory.is_empty():
                 distorted_info.append(None)
                 continue
 
@@ -40,7 +48,7 @@ class RumourSpreadModel:
             )
 
             if random() <= distortion_prob:
-                distorted_info.append(distort_info(most_freq_info))
+                distorted_info.append(self.distort_info(most_freq_info))
             else:
                 distorted_info.append(most_freq_info)
 
@@ -48,7 +56,7 @@ class RumourSpreadModel:
 
     def update_node_memory(self, buffer_info):
 
-        nodes_degree = self.scale_free_graph.compute_degree()
+        nodes_degree = self.scale_free_graph.compute_degrees()
 
         for node in range(self.num_nodes):
 
@@ -68,7 +76,7 @@ class RumourSpreadModel:
                 )
 
                 if random() <= acceptance_prob:
-                    self.nodes_memory[node].insert(buffer_info[node])
+                    self.nodes_memory[node].insert(buffer_info[nbr])
 
     def inject_info(self, info_propagators):
 
@@ -83,11 +91,11 @@ class RumourSpreadModel:
     def simulate(self, info_propagators, time_steps, callback_list):
 
         self.inject_info(info_propagators)
-        for _ in range(time_steps):
+        for t in range(time_steps):
             self.simulate_step()
 
             for callback in callback_list:
-                callback.call_after_step(self)
+                callback.call_after_step(self, t)
 
         return [callback.get_result() for callback in callback_list]
 
@@ -96,7 +104,7 @@ class Callback:
     def __init__(self):
         pass
 
-    def call_after_step(self, rumour_spread):
+    def call_after_step(self, rumour_spread: RumourSpreadModel, t: int):
         pass
 
     def get_result(self):
