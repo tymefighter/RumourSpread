@@ -80,8 +80,19 @@ class RumourSpreadModel:
         distorted_info = self.get_distorted_info()
         self.update_node_memory(distorted_info)
         
-    def simulate(self, info_propagators, time_steps):
+    def simulate(self, info_propagators, time_steps, callback_list):
 
         self.inject_info(info_propagators)
         for t in range(time_steps):
             self.simulate_step()
+
+            for callback in callback_list:
+                callback.call_after_step(self)
+
+class Callback:
+
+    def __init__(self):
+        pass
+
+    def call_after_step(self, rumour_spread):
+        pass
