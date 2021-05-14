@@ -22,12 +22,12 @@ class MemoryQueue:
 
             self.size -= 1
 
-        if x not in self.prob:
+        if x not in self.freq_dict:
             self.freq_dict[x] = 1
-
         else:
             self.freq_dict[x] += 1
 
+        self.deque.append(x)
         self.size += 1
 
     def insert_list(self, lst):
@@ -42,7 +42,7 @@ class MemoryQueue:
             max_freq = max(max_freq, freq)
 
         most_freq_elem_list = []
-        for x, freq in self.freq.items():
+        for x, freq in self.freq_dict.items():
             if freq == max_freq:
                 most_freq_elem_list.append(x)
 
@@ -57,4 +57,4 @@ class MemoryQueue:
             prob = freq / self.size
             entropy += prob * log2(prob)
 
-        return entropy
+        return -entropy
