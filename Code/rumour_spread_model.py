@@ -62,17 +62,19 @@ class RumourSpreadModel:
 
             nbr_list = self.scale_free_graph.adj_list[node]
             max_nbr_degree = 0
+            min_nbr_degree = self.num_nodes
             degree = nodes_degree[node]
 
             for nbr in nbr_list:
                 max_nbr_degree = max(max_nbr_degree, nodes_degree[nbr])
+                min_nbr_degree = min(min_nbr_degree, nodes_degree[nbr])
 
             for nbr in nbr_list:
                 if buffer_info[nbr] is None:
                     continue
                 
                 acceptance_prob = self.prob.compute_acceptance_prob(
-                    degree, max_nbr_degree
+                    degree, max_nbr_degree, min_nbr_degree
                 )
 
                 if random() <= acceptance_prob:
