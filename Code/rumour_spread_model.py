@@ -89,10 +89,15 @@ class RumourSpreadModel:
             for callback in callback_list:
                 callback.call_after_step(self)
 
+        return [callback.get_result() for callback in callback_list]
+
 class Callback:
 
     def __init__(self):
         pass
 
     def call_after_step(self, rumour_spread):
+        pass
+
+    def get_result(self):
         pass
