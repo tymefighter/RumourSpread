@@ -16,12 +16,13 @@ def main():
     num_nodes = 3000
     num_bits = 5
     timesteps = 100
-    conservation_factor = 1
+    conservation_factor = 0
     confidence_factor = -3
     
     rumour_spread = RumourSpreadModel(
-        num_nodes, num_bits, 100,
-        conservation_factor, confidence_factor
+        num_nodes, num_bits, 320,
+        conservation_factor, confidence_factor,
+        5, 2
     )
     result_list = rumour_spread.simulate(
         {0: 0}, timesteps, 
