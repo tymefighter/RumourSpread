@@ -31,19 +31,21 @@ class OpinionFragmentation(Callback):
         super().__init__()
 
         num_values = 1 << num_bits
-        self.bit_counts = [[0] * num_values for _ in range(time_steps)]
+        self.opinion_freq = [[0] * num_values for _ in range(time_steps)]
         self.num_nodes = num_nodes
         
     def call_after_step(self, rumour_spread: RumourSpreadModel, t: int):
 
-        for node_memory in rumour_spread.nodes_memory():
+        opinion_freq_list = self.opinion_freq[t]
+        
+        for node_memory in rumour_spread.get_nodes_memory():
             if len(node_memory.deque) > 0:
-                self.bit_counts[node_memory.get_most_freq_elem()] += 1
+                opinion_freq_list[node_memory.get_most_freq_elem()] += 1
         
     def get_result(self):
                 
-        for bit_count_list in self.bit_counts:
-            for i in range(len(bit_count_list)):
-                bit_count_list[i] /= self.num_nodes
+        for opinion_freq_list in self.opinion_freq:
+            for i in range(len(opinion_freq_list)):
+                opinion_freq_list[i] /= self.num_nodes
 
-        return self.bit_counts
+        return self.opinion_freq
