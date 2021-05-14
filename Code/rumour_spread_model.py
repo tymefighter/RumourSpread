@@ -1,4 +1,4 @@
-from random import randint, choices
+from random import randint, random
 
 from memory_queue import MemoryQueue
 from prob import Prob
@@ -39,11 +39,7 @@ class RumourSpreadModel:
                 node_memory.compute_entropy()
             )
 
-            if choices(
-                    population=[True, False],
-                    weights=[distortion_prob, 1 - distortion_prob],
-                    k=1
-            )[0] == True:
+            if random() <= distortion_prob:
                 distorted_info.append(distort_info(most_freq_info))
             else:
                 distorted_info.append(most_freq_info)
@@ -54,37 +50,27 @@ class RumourSpreadModel:
 
         nodes_degree = self.scale_free_graph.compute_degree()
 
-        # acceptance at 'node'
         for node in range(self.num_nodes):
 
-            adj_list = self.scale_free_graph.adj_list[node]
+            nbr_list = self.scale_free_graph.adj_list[node]
             max_nbr_degree = 0
             degree = nodes_degree[node]
 
-            for nbr in adj_list:
+            for nbr in nbr_list:
                 max_nbr_degree = max(max_nbr_degree, nodes_degree[nbr])
 
-            for nbr in adj_list:
-                if buffer_memory[nbr] is None:
+            for nbr in nbr_list:
+                if buffer_info[nbr] is None:
                     continue
                 
-                # acctance prob of 'node' from 'nbr'
                 acceptance_prob = self.prob.compute_acceptance_prob(
                     degree, max_nbr_degree
                 )
 
-                if choices(
-                    population=[True, False],
-                    weights=[acceptance_prob, 1 - acceptance_prob],
-                    k=1
-            )[0] == True:
-                self.nodes_memory[node].insert(buffer_info[node])
+                if random() <= acceptance_prob:
+                    self.nodes_memory[node].insert(buffer_info[node])
 
     def inject_info(self, info_propagators):
-        """
-        Args : 
-        new_info : python dictionary
-        """
 
         for node, info in info_propagators.items():
             self.nodes_memory[node].insert(info)
@@ -94,8 +80,24 @@ class RumourSpreadModel:
         distorted_info = self.get_distorted_info()
         self.update_node_memory(distorted_info)
         
-    def simulate(self, info_propagators, time_steps):
+    def simulate(self, info_propagators, time_steps, callback_list):
 
         self.inject_info(info_propagators)
-        for t in range(time_steps):
+        for _ in range(time_steps):
             self.simulate_step()
+
+            for callback in callback_list:
+                callback.call_after_step(self)
+
+        return [callback.get_result() for callback in callback_list]
+
+class Callback:
+
+    def __init__(self):
+        pass
+
+    def call_after_step(self, rumour_spread):
+        pass
+
+    def get_result(self):
+        pass
