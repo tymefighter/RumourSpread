@@ -39,7 +39,7 @@ class OpinionFragmentation(Callback):
         opinion_freq_list = self.opinion_freq[t]
         
         for node_memory in rumour_spread.get_nodes_memory():
-            if len(node_memory.deque) > 0:
+            if not node_memory.is_empty():
                 opinion_freq_list[node_memory.get_most_freq_elem()] += 1
         
     def get_result(self):
