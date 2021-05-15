@@ -16,7 +16,11 @@ class Prob:
         return 1.0 \
             / (math.exp(entropy_diff_frac * self.conservation_factor) + 1)
 
-    def compute_acceptance_prob(self, degree, max_nbr_degree):
+    def compute_acceptance_prob(self, degree, max_nbr_degree, min_nbr_degree):
+
+        max_deg_pow = math.pow(max_nbr_degree, self.confidence_factor) \
+            if self.confidence_factor > 0 \
+            else math.pow(min_nbr_degree, self.confidence_factor)
         
         return math.pow(degree, self.confidence_factor) \
-            / math.pow(max_nbr_degree, self.confidence_factor)
+            / max_deg_pow
