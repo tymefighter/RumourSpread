@@ -11,6 +11,10 @@ from plot import (
     plot_avg_info_entropy
 )
 
+NUM_NODES = 3000
+NUM_BITS = 5
+TIMESTEPS = 200
+
 def main():
 
     num_nodes = 3000
@@ -37,11 +41,12 @@ def main():
         )]
     )
 
-    plot_range_of_info_spread(result_list[0])
-    plot_opinion_fragmentation(result_list[1])
+    plot_range_of_info_spread([result_list[0]], ['Range of Info. Spread'])
+    plot_opinion_fragmentation([result_list[1]], ['Opinion Frequency'])
     plot_avg_info_entropy(
         [result_list[2]], 
-        [f'k = {conservation_factor}, beta = {confidence_factor}']
+        [f'k = {conservation_factor}, beta = {confidence_factor}'],
+        'Avg. Info. Entropy'
     )
 
 if __name__ == '__main__':
