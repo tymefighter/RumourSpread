@@ -68,3 +68,37 @@ class AverageInformationEntropy(Callback):
     def get_result(self):
 
         return self.avg_entropy
+
+class Adversary(Callback):
+
+    def __init__(self, feed_value, num_target_nodes, start_timestep):
+        super().__init__()
+
+        self.feed_value = feed_value
+        self.num_target_nodes = num_target_nodes
+        self.target_nodes = None
+        self.start_timestep = start_timestep
+
+    def call_after_step(self, rumour_spread: RumourSpreadModel, t: int):
+
+        if t < self.start_timestep:
+            return
+
+        if self.target_nodes is None:
+
+            deg_list = rumour_spread.get_graph().compute_degrees()
+            deg_idx_list = [(deg_list, i) for i in range(len(deg_list))]
+
+            sorted(deg_idx_list, key=lambda x: x[0], reverse=True)
+
+            self.target_nodes = [
+                deg_idx_list[i][1] for i in range(self.num_target_nodes)
+            ]
+        
+        nodes_memory = rumour_spread.get_nodes_memory()
+
+        for node in self.target_nodes:
+            nodes_memory[node].insert(self.feed_value)
+
+    def get_result(self):
+        return None
