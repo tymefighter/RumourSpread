@@ -14,12 +14,12 @@ from plot import (
     plot_avg_info_entropy
 )
 
-NUM_NODES = 1000
+NUM_NODES = 500
 NUM_BITS = 5
-NODE_CAPACITY = 200
+NODE_CAPACITY = 100
 INIT_NUM_NODES = 20
-NUM_EDGES_PER_STEP = 10
-TIMESTEPS = 200
+NUM_EDGES_PER_STEP = 20
+TIMESTEPS = 20
 
 def main():
 
@@ -28,8 +28,8 @@ def main():
             .compute_degree_distribution(), 150
     )
 
-    confidence_factor_list = [1, 0, -3]
-    conservation_factor_list = [0, 0.5, 1.0, 3.0, 6.0, 10.0]
+    confidence_factor_list = [1]
+    conservation_factor_list = [3.0]
 
     for confidence_factor in confidence_factor_list:
         
@@ -52,7 +52,7 @@ def main():
 
             _, range_of_info_spread_list[i], opinion_freq_list[i], avg_entropy_list[i] = \
                 rumour_spread.simulate({0: 0}, TIMESTEPS, [
-                    Adversary(0, 10, 0),
+                    Adversary(0, 100, 0),
                     RangeOfInformationSpread(
                         NUM_NODES, NUM_BITS, TIMESTEPS
                     ),
@@ -66,11 +66,11 @@ def main():
 
         plot_range_of_info_spread(
             range_of_info_spread_list, title_list, suptitle,
-            num_plots_per_row=3
+            num_plots_per_row=2
         )
         plot_opinion_fragmentation(
             opinion_freq_list, title_list, suptitle,
-            num_plots_per_row=3
+            num_plots_per_row=2
         )
         plot_avg_info_entropy(avg_entropy_list, title_list, suptitle)
 
