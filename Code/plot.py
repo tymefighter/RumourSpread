@@ -15,7 +15,7 @@ def plot_bit_counts(
 ):
     assert num_plots_per_row > 1
 
-    num_rows = (len(bit_counts_list) + 1) // num_plots_per_row
+    num_rows = (len(bit_counts_list) + num_plots_per_row) // num_plots_per_row
     fig, axes = plt.subplots(
         nrows=num_rows, ncols=num_plots_per_row, figsize=(16, 10)
     )
@@ -39,10 +39,10 @@ def plot_bit_counts(
         sns.heatmap(bit_count_df, ax=ax, cmap='viridis')
         ax.set_title(title_list[idx])
 
-    for j in range(idx + 1, len(bit_counts_list)):
+    for j in range(idx + 1, num_rows * num_plots_per_row):
         fig.delaxes(
-            axes[idx % num_plots_per_row] if num_rows == 1
-            else axes[idx // num_plots_per_row][idx % num_plots_per_row]
+            axes[j % num_plots_per_row] if num_rows == 1
+            else axes[j // num_plots_per_row][j % num_plots_per_row]
         )
 
     fig.suptitle(suptitle)
