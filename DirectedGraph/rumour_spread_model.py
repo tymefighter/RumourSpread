@@ -56,29 +56,33 @@ class RumourSpreadModel:
 
     def update_node_memory(self, buffer_info):
 
-        nodes_degree = self.scale_free_graph.compute_degrees()
-
+        nodes_outdegree = self.scale_free_graph.compute_outdegrees()
+        max_nbr_outdegree = [0] * self.num_nodes
+        min_nbr_outdegree = [self.num_nodes] * self.num_nodes
+        
         for node in range(self.num_nodes):
-
             nbr_list = self.scale_free_graph.adj_list[node]
-            max_nbr_degree = 0
-            min_nbr_degree = self.num_nodes
             degree = nodes_degree[node]
 
             for nbr in nbr_list:
-                max_nbr_degree = max(max_nbr_degree, nodes_degree[nbr])
-                min_nbr_degree = min(min_nbr_degree, nodes_degree[nbr])
+                max_nbr_outdegree[nbr] = max(max_nbr_outdegreep[nbr], degree)
+                min_nbr_outdegree[nbr] = min(min_nbr_outdegree[nbr], degree)
 
+        for node in range(self.num_nodes):
+
+            if buffer_info[node] is None:
+                continue
+            
+            nbr_list = self.scale_free_graph.adj_list[node]
+            degree = nodes_degree[node]
+            
             for nbr in nbr_list:
-                if buffer_info[nbr] is None:
-                    continue
-                
                 acceptance_prob = self.prob.compute_acceptance_prob(
-                    degree, max_nbr_degree, min_nbr_degree
+                    degree, max_nbr_outdegree[nbr], min_nbr_degree[nbr]
                 )
 
                 if random() <= acceptance_prob:
-                    self.nodes_memory[node].insert(buffer_info[nbr])
+                    self.nodes_memory[nbr].insert(buffer_info[node])
 
     def inject_info(self, info_propagators):
 
