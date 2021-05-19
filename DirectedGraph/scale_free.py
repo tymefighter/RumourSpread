@@ -65,6 +65,7 @@ def generate_scale_free(
             i += 1
 
         graph.add_edge(u, v)
+        edge_set.add((u, v))
         outdeg[u] += 1
         indeg[v] += 1
         num_edges += 1
