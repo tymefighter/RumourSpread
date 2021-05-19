@@ -68,3 +68,62 @@ class AverageInformationEntropy(Callback):
     def get_result(self):
 
         return self.avg_entropy
+
+class Adversary(Callback):
+
+    def __init__(self, feed_value, num_target_nodes, start_timestep):
+        super().__init__()
+
+        self.feed_value = feed_value
+        self.num_target_nodes = num_target_nodes
+        self.start_timestep = start_timestep
+        self.first_run = True
+
+    def call_after_step(self, rumour_spread: RumourSpreadModel, t: int):
+
+        if t < self.start_timestep:
+            return
+
+        if self.first_run:
+
+            deg_list = rumour_spread.get_graph().compute_degrees()
+            deg_idx_list = [(deg_list, i) for i in range(len(deg_list))]
+
+            sorted(deg_idx_list, key=lambda x: x[0], reverse=True)
+
+            target_nodes = [
+                deg_idx_list[i][1] for i in range(self.num_target_nodes)
+            ]
+
+            nodes_memory = rumour_spread.get_nodes_memory()
+
+            class FixedMemory:
+
+                def __init__(self, feed_value):
+                    self.feed_value = feed_value
+
+                def insert(self, x):
+                    pass
+
+                def insert_list(self, lst):
+                    pass
+
+                def get_most_freq_elem(self):
+                    return self.feed_value
+
+                def compute_entropy(self):
+                    return 0
+
+                def is_empty(self):
+                    return False
+
+                def get_freq_dict(self):
+                    return {self.feed_value: 1}
+
+            for node in target_nodes:
+                nodes_memory[node] = FixedMemory(self.feed_value)
+
+            self.first_run = False
+
+    def get_result(self):
+        return None

@@ -1,3 +1,5 @@
+import numpy as np
+
 class Graph:
 
     def __init__(self, n):
@@ -30,3 +32,42 @@ class Graph:
             deg_dist[deg] += 1
 
         return deg_dist
+
+    def compute_diameter(self):
+
+        INF = int(1e8)
+        dp = [[INF for i in range(self.n)] for j in range(self.n)]
+
+        for node in range(self.n):
+            for nbr in self.adj_list[node]:
+                dp[node][nbr] = 1
+
+        for k in range(self.n):
+            for i in range(self.n):
+                for j in range(self.n):
+                    dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])
+
+        diameter = 0
+        for i in range(self.n):
+            for j in range(self.n):
+
+                diameter = max(diameter, dp[i][j])
+
+        return 'infinity' if diameter == INF else diameter
+
+    def compute_diameter(self):
+
+        dp = np.full((self.n, self.n), np.inf)
+
+        for node in range(self.n):
+            for nbr in self.adj_list[node]:
+                dp[node, nbr] = 1
+
+        for k in range(self.n):
+            dp = np.minimum(
+                dp, np.expand_dims(dp[:, k], axis=1) 
+                + np.expand_dims(dp[k, :], axis=0))
+
+        diameter = np.max(dp)
+
+        return 'infinity' if diameter == np.inf else diameter
