@@ -7,6 +7,7 @@ def initialize_graph(n, init_num_nodes):
     tree = Graph(n)
     indeg = np.zeros(n)
     outdeg = np.zeros(n)
+    edge_set = set()
 
     for i in range(1, init_num_nodes):
         j = np.random.randint(0, i)
@@ -15,7 +16,9 @@ def initialize_graph(n, init_num_nodes):
         outdeg[j] += 1
         indeg[i] += 1
 
-    return tree, indeg, outdeg
+        edge_set.add((i, j))
+
+    return tree, indeg, outdeg, edge_set
 
 def generate_scale_free(
     n, init_num_nodes,
@@ -23,10 +26,10 @@ def generate_scale_free(
     delta_in, delta_out
 ):
     
-    graph, indeg, outdeg = initialize_graph(n, init_num_nodes)
+    graph, indeg, outdeg, edge_set = initialize_graph(n, init_num_nodes)
     i = init_num_nodes
 
-    num_edges = np.sum(indeg)
+    num_edges = len(edge_set)
     while i < n:
 
         choice = np.random.choice(
@@ -35,34 +38,35 @@ def generate_scale_free(
         )
 
         if choice == 'to-vert':
+            u = i
             v = np.random.choice(
                 i, p=(indeg[:i] + delta_in) / (num_edges + i * delta_in)
             )
-            graph.add_edge(i, v)
-            outdeg[i] += 1
-            indeg[v] += 1
             i += 1
 
         elif choice == 'btw-vert':
-            u = np.random.choice(
-                i, p=(outdeg[:i] + delta_out) / (num_edges + i * delta_out)
-            )
-            v = np.random.choice(
-                i, p=(indeg[:i] + delta_in) / (num_edges + i * delta_in)
-            )
-            graph.add_edge(u, v)
-            outdeg[u] += 1
-            indeg[v] += 1
+
+            already_present = True
+            while already_present:
+                u = np.random.choice(
+                    i, p=(outdeg[:i] + delta_out) / (num_edges + i * delta_out)
+                )
+                v = np.random.choice(
+                    i, p=(indeg[:i] + delta_in) / (num_edges + i * delta_in)
+                )
+
+                already_present = (u, v) in edge_set
 
         else:
             u = np.random.choice(
                 i, p=(outdeg[:i] + delta_out) / (num_edges + i * delta_out)
             )
-            graph.add_edge(u, i)
-            outdeg[u] += 1
-            indeg[i] += 1
+            v = i
             i += 1
 
+        graph.add_edge(u, v)
+        outdeg[u] += 1
+        indeg[v] += 1
         num_edges += 1
 
     return graph
