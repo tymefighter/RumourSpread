@@ -11,9 +11,9 @@ from plot import (
     plot_avg_info_entropy
 )
 
-NUM_NODES = 3000
+NUM_NODES = 1000
 NUM_BITS = 5
-NODE_CAPACITY = 320
+NODE_CAPACITY = 100
 INIT_NUM_NODES = 5
 NUM_EDGES_PER_STEP = 2
 TIMESTEPS = 200
