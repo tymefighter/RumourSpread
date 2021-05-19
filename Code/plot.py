@@ -17,7 +17,7 @@ def plot_bit_counts(
 
     num_rows = (len(bit_counts_list) + num_plots_per_row) // num_plots_per_row
     fig, axes = plt.subplots(
-        nrows=num_rows, ncols=num_plots_per_row, figsize=(16, 10)
+        nrows=num_rows, ncols=num_plots_per_row, figsize=(16, 14)
     )
 
     for idx, bit_counts in enumerate(bit_counts_list):
