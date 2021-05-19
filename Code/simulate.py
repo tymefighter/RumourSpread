@@ -16,11 +16,11 @@ NUM_BITS = 5
 NODE_CAPACITY = 320
 INIT_NUM_NODES = 5
 NUM_EDGES_PER_STEP = 2
-TIMESTEPS = 200
+TIMESTEPS = 500
 
 def main():
 
-    confidence_factor_list = [1, 0, -3]
+    confidence_factor_list = [-3, 0, 1]
     conservation_factor_list = [0, 0.5, 1.0, 3.0, 6.0, 10.0]
 
     for confidence_factor in confidence_factor_list:
@@ -55,16 +55,16 @@ def main():
                     )]
                 )
 
-        plot_range_of_info_spread(
-            range_of_info_spread_list, title_list, suptitle,
-            num_plots_per_row=3
-        )
+        plot_avg_info_entropy(avg_entropy_list, title_list, 'Average Entropy, ' + suptitle)
         plot_opinion_fragmentation(
-            opinion_freq_list, title_list, suptitle,
+            opinion_freq_list, title_list, 'Opinion Fragmentation, ' + suptitle,
             num_plots_per_row=3
         )
-        plot_avg_info_entropy(avg_entropy_list, title_list, suptitle)
-
+        plot_range_of_info_spread(
+            range_of_info_spread_list, title_list, 'Range of Information, ' + suptitle,
+            num_plots_per_row=3
+        )
+        
 if __name__ == '__main__':
     main()
 

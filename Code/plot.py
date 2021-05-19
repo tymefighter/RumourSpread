@@ -15,9 +15,9 @@ def plot_bit_counts(
 ):
     assert num_plots_per_row > 1
 
-    num_rows = (len(bit_counts_list) + num_plots_per_row) // num_plots_per_row
+    num_rows = (len(bit_counts_list) + num_plots_per_row - 1) // num_plots_per_row
     fig, axes = plt.subplots(
-        nrows=num_rows, ncols=num_plots_per_row, figsize=(16, 14)
+        nrows=num_rows, ncols=num_plots_per_row, figsize=(16, 9)
     )
 
     for idx, bit_counts in enumerate(bit_counts_list):
@@ -45,6 +45,7 @@ def plot_bit_counts(
             else axes[j // num_plots_per_row][j % num_plots_per_row]
         )
 
+    # fig.tight_layout()
     fig.suptitle(suptitle)
     plt.show()
 
