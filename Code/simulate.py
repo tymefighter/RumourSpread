@@ -11,9 +11,9 @@ from plot import (
     plot_avg_info_entropy
 )
 
-NUM_NODES = 1000
+NUM_NODES = 3000
 NUM_BITS = 5
-NODE_CAPACITY = 100
+NODE_CAPACITY = 320
 INIT_NUM_NODES = 5
 NUM_EDGES_PER_STEP = 2
 TIMESTEPS = 200
@@ -21,7 +21,7 @@ TIMESTEPS = 200
 def main():
 
     confidence_factor_list = [1, 0, -3]
-    conservation_factor_list = [0, 0.5, 1.0, 3.0, 6.0, 10.0]
+    conservation_factor_list = [0, 1.0, 3.0, 10.0]
 
     for confidence_factor in confidence_factor_list:
         
