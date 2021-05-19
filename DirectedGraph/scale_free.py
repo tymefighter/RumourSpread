@@ -4,31 +4,51 @@ from graph import Graph
 
 def initialize_graph(n, init_num_nodes):
     
-    spanning_tree = Graph(n)
+    tree = Graph(n)
+    indeg = np.zeros(n)
+    outdeg = np.zeros(n)
 
     for i in range(1, init_num_nodes):
         j = np.random.randint(0, i)
-        spanning_tree.add_edge(i, j)
+        tree.add_edge(j, i)
 
-    return spanning_tree
+        outdeg[j] += 1
+        indeg[i] += 1
 
-def generate_scale_free(n, init_num_nodes, num_edges_per_step):
+    return tree, indeg, outdeg
+
+def generate_scale_free(
+    n, init_num_nodes,
+    alpha, beta, gamma,
+    delta_in, delta_out
+):
     
-    graph = initialize_graph(n, init_num_nodes)
+    graph, indeg, outdeg = initialize_graph(n, init_num_nodes)
+    i = init_num_nodes
 
-    deg_list = np.zeros(n, dtype=np.int32)
-    deg_list[:init_num_nodes] = 1
+    num_edges = np.sum(indeg)
+    while i < n:
 
-    for i in range(init_num_nodes, n):
-        deg_prob = deg_list[:i].astype(np.float32)
-        deg_prob /= deg_prob.sum()
+        choice = np.random.choice(
+            ['to-vert', 'btw-vert', 'from-vert'],
+            p=[alpha, beta, gamma]
+        )
 
-        verts = np.random.choice(i, num_edges_per_step, False, deg_prob)
+        if choice == 'to-vert':
+            v = np.random.choice(i, p=indeg[:i] / num_edges)
+            graph.add_edge(i, v)
+            i += 1
 
-        for j in verts:
-            graph.add_edge(i, j)
-            deg_list[j] += 1
+        elif choice == 'btw-vert':
+            u = np.random.choice(i, p=outdeg[:i] / num_edges)
+            v = np.random.choice(i, p=indeg[:i] / num_edges)
+            graph.add_edge(u, v)
 
-        deg_list[i] += num_edges_per_step
+        else:
+            u = np.random.choice(i, p=outdeg[:i] / num_edges)
+            graph.add_edge(u, i)
+            i += 1
+
+        num_edges += 1
 
     return graph

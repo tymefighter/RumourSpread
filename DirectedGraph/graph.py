@@ -18,20 +18,6 @@ class Graph:
 
         return self.n - 1
 
-    def compute_degrees(self):
-
-        return [len(self.adj_list[i]) for i in range(self.n)]
-
-    def compute_degree_distribution(self):
-
-        deg_list = self.compute_degrees()
-        deg_dist = [0] * self.n
-
-        for deg in deg_list:
-            deg_dist[deg] += 1
-
-        return deg_dist
-
     def compute_diameter(self):
 
         dp = np.full((self.n, self.n), np.inf)
