@@ -47,7 +47,7 @@ class MemoryQueue:
         for x in lst:
             self.insert(x)
     
-    def get_most_freq_elem(self):
+    def get_most_freq_elem(self, get_all=False):
 
         max_freq = 0
         for freq in self.freq_dict.values():
@@ -58,7 +58,11 @@ class MemoryQueue:
             if freq == max_freq:
                 most_freq_elem_list.append(x)
 
-        return choice(most_freq_elem_list)
+        ret_val = most_freq_elem_list
+        if not get_all:
+            ret_val = choice(ret_val) 
+
+        return ret_val
 
     def compute_entropy(self):
 
