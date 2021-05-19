@@ -1,24 +1,47 @@
+import numpy as np
 from rumour_spread_model import RumourSpreadModel
 from callback import (
     RangeOfInformationSpread,
     OpinionFragmentation,
     AverageInformationEntropy
 )
-
 from plot import (
     plot_range_of_info_spread,
     plot_opinion_fragmentation,
-    plot_avg_info_entropy
+    plot_avg_info_entropy,
+    plot_degree_distribution
 )
+from scale_free import generate_scale_free
 
 NUM_NODES = 3000
 NUM_BITS = 5
 NODE_CAPACITY = 320
-INIT_NUM_NODES = 5
-NUM_EDGES_PER_STEP = 2
+ALPHA = 0.03
+BETA = 0.9
+GAMMA = 0.07
+DELTA_IN = 20.0
+DELTA_OUT = 30.0
+INIT_NUM_NODES = 10
 TIMESTEPS = 500
 
 def main():
+
+    graph = generate_scale_free(
+        NUM_NODES, INIT_NUM_NODES, 
+        ALPHA, BETA, GAMMA, DELTA_IN, DELTA_OUT
+    )
+
+    plot_degree_distribution(
+        graph.compute_outdegree_distribution(), 
+        int(0.08 * NUM_NODES),
+        'Outdegree Distribution'
+    )
+
+    plot_degree_distribution(
+        graph.compute_indegree_distribution(), 
+        int(0.08 * NUM_NODES),
+        'Indegree Distribution'
+    )
 
     confidence_factor_list = [-3, 0, 1]
     conservation_factor_list = [0, 0.5, 1.0, 3.0, 6.0, 10.0]
@@ -39,11 +62,18 @@ def main():
             rumour_spread = RumourSpreadModel(
                 NUM_NODES, NUM_BITS, NODE_CAPACITY,
                 conservation_factor, confidence_factor,
-                INIT_NUM_NODES, NUM_EDGES_PER_STEP
+                INIT_NUM_NODES, ALPHA, BETA, GAMMA, DELTA_IN, DELTA_OUT,
+                plot_degree_dist=False
+            )
+
+            graph = rumour_spread.get_graph()
+            outdegree = np.array(graph.compute_outdegrees())
+            init_node = np.random.choice(
+                NUM_NODES, p=outdegree / np.sum(outdegree)
             )
 
             range_of_info_spread_list[i], opinion_freq_list[i], avg_entropy_list[i] = \
-                rumour_spread.simulate({0: 0}, TIMESTEPS, [
+                rumour_spread.simulate({init_node: 0}, TIMESTEPS, [
                     RangeOfInformationSpread(
                         NUM_NODES, NUM_BITS, TIMESTEPS
                     ),

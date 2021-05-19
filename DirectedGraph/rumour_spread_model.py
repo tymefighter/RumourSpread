@@ -3,22 +3,40 @@ from random import randint, random
 from memory_queue import MemoryQueue
 from prob import Prob
 from scale_free import generate_scale_free
+from plot import plot_degree_distribution
 
 class RumourSpreadModel:
 
     def __init__(
-        self, num_nodes, num_bits, node_capacity, conservation_factor,
-        confidence_factor, init_num_nodes=1, num_edges_per_step=1
+        self, num_nodes, num_bits, node_capacity, 
+        conservation_factor, confidence_factor,
+        init_num_nodes, alpha, beta, gamma, delta_in, delta_out,
+        plot_degree_dist=False
     ):
         self.num_nodes = num_nodes
         self.num_bits = num_bits
         self.prob = Prob(num_bits, conservation_factor, confidence_factor)
         self.scale_free_graph = generate_scale_free(
-            num_nodes, init_num_nodes, num_edges_per_step
+            num_nodes, init_num_nodes,
+            alpha, beta, gamma,
+            delta_in, delta_out
         )
         self.nodes_memory = [
             MemoryQueue(node_capacity) for _ in range(num_nodes)
         ]
+
+        if plot_degree_dist:
+            plot_degree_distribution(
+                self.scale_free_graph.compute_outdegree_distribution(), 
+                int(0.08 * num_nodes),
+                'Outdegree Distribution'
+            )
+
+            plot_degree_distribution(
+                self.scale_free_graph.compute_indegree_distribution(), 
+                int(0.08 * num_nodes),
+                'Indegree Distribution'
+            )
 
     def get_graph(self):
 
@@ -62,10 +80,10 @@ class RumourSpreadModel:
         
         for node in range(self.num_nodes):
             nbr_list = self.scale_free_graph.adj_list[node]
-            degree = nodes_degree[node]
+            degree = nodes_outdegree[node]
 
             for nbr in nbr_list:
-                max_nbr_outdegree[nbr] = max(max_nbr_outdegreep[nbr], degree)
+                max_nbr_outdegree[nbr] = max(max_nbr_outdegree[nbr], degree)
                 min_nbr_outdegree[nbr] = min(min_nbr_outdegree[nbr], degree)
 
         for node in range(self.num_nodes):
@@ -74,11 +92,11 @@ class RumourSpreadModel:
                 continue
             
             nbr_list = self.scale_free_graph.adj_list[node]
-            degree = nodes_degree[node]
+            degree = nodes_outdegree[node]
             
             for nbr in nbr_list:
                 acceptance_prob = self.prob.compute_acceptance_prob(
-                    degree, max_nbr_outdegree[nbr], min_nbr_degree[nbr]
+                    degree, max_nbr_outdegree[nbr], min_nbr_outdegree[nbr]
                 )
 
                 if random() <= acceptance_prob:

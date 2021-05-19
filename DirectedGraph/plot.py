@@ -4,9 +4,10 @@ import pandas as pd
 import numpy as np
 import math
 
-def plot_degree_distribution(degree_distribution, max_degree):
+def plot_degree_distribution(degree_distribution, max_degree, title):
     
     plt.plot(degree_distribution[:max_degree + 1])
+    plt.title(title)
     plt.show()
 
 def plot_bit_counts(
