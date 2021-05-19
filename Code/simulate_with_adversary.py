@@ -14,23 +14,25 @@ from plot import (
     plot_avg_info_entropy
 )
 
-NUM_NODES = 500
+NUM_NODES = 1000
 NUM_BITS = 5
 NODE_CAPACITY = 100
-INIT_NUM_NODES = 20
-NUM_EDGES_PER_STEP = 20
-TIMESTEPS = 20
+INIT_NUM_NODES = 30
+NUM_EDGES_PER_STEP = 25
+TIMESTEPS = 2000
 
 def main():
 
-    plot_degree_distribution(
-        generate_scale_free(NUM_NODES, INIT_NUM_NODES, NUM_EDGES_PER_STEP)
-            .compute_degree_distribution(), 150
-    )
+    graph =  generate_scale_free(NUM_NODES, INIT_NUM_NODES, NUM_EDGES_PER_STEP)
+    degree_dist = graph.compute_degree_distribution()
 
-    confidence_factor_list = [1]
-    conservation_factor_list = [3.0]
+    plot_degree_distribution(degree_dist, 300)
+    print(f'Diameter {graph.compute_diameter()}')
 
+    confidence_factor_list = [4.5]
+    conservation_factor_list = [1.0]
+
+    # Curr Best: K = 1.0, β = 4.5
     for confidence_factor in confidence_factor_list:
         
         m = len(conservation_factor_list)
@@ -52,7 +54,7 @@ def main():
 
             _, range_of_info_spread_list[i], opinion_freq_list[i], avg_entropy_list[i] = \
                 rumour_spread.simulate({0: 0}, TIMESTEPS, [
-                    Adversary(0, 100, 0),
+                    Adversary(0, 50, 500),
                     RangeOfInformationSpread(
                         NUM_NODES, NUM_BITS, TIMESTEPS
                     ),
