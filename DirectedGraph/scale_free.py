@@ -35,17 +35,25 @@ def generate_scale_free(
         )
 
         if choice == 'to-vert':
-            v = np.random.choice(i, p=indeg[:i] / num_edges)
+            v = np.random.choice(
+                i, p=(indeg[:i] + delta_in) / (num_edges + i * delta_in)
+            )
             graph.add_edge(i, v)
             i += 1
 
         elif choice == 'btw-vert':
-            u = np.random.choice(i, p=outdeg[:i] / num_edges)
-            v = np.random.choice(i, p=indeg[:i] / num_edges)
+            u = np.random.choice(
+                i, p=(outdeg[:i] + delta_out) / (num_edges + i * delta_out)
+            )
+            v = np.random.choice(
+                i, p=(indeg[:i] + delta_in) / (num_edges + i * delta_in)
+            )
             graph.add_edge(u, v)
 
         else:
-            u = np.random.choice(i, p=outdeg[:i] / num_edges)
+            u = np.random.choice(
+                i, p=(outdeg[:i] + delta_out) / (num_edges + i * delta_out)
+            )
             graph.add_edge(u, i)
             i += 1
 
