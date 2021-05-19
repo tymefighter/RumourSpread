@@ -2,7 +2,7 @@ import numpy as np
 
 from graph import Graph
 
-def initialize_graph(n, init_num_nodes):
+def initialize_graph_tree(n, init_num_nodes):
     
     tree = Graph(n)
     indeg = np.zeros(n)
@@ -26,7 +26,7 @@ def generate_scale_free(
     delta_in, delta_out
 ):
     
-    graph, indeg, outdeg, edge_set = initialize_graph(n, init_num_nodes)
+    graph, indeg, outdeg, edge_set = initialize_graph_tree(n, init_num_nodes)
     i = init_num_nodes
 
     num_edges = len(edge_set)

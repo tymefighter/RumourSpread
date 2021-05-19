@@ -17,13 +17,28 @@ from scale_free import generate_scale_free
 NUM_NODES = 3000
 NUM_BITS = 5
 NODE_CAPACITY = 320
-ALPHA = 0.03
-BETA = 0.9
-GAMMA = 0.07
+ALPHA = 0.010
+BETA = 0.970
+GAMMA = 0.020
 DELTA_IN = 20.0
 DELTA_OUT = 30.0
-INIT_NUM_NODES = 10
+INIT_NUM_NODES = 100
+NUM_PROPAGATORS = 10
 TIMESTEPS = 2000
+
+def get_center_window(outdegrees, window_size):
+
+    outdegree_pairs = list(enumerate(outdegrees))
+    sorted(outdegree_pairs, key=lambda x: x[0])
+
+    n = len(outdegree_pairs)
+    center_idx = n // 2
+
+    return [
+        node for _, node in 
+        outdegree_pairs[max(center_idx - window_size, 0): 
+            min(center_idx + window_size, n - 1)]
+    ]
 
 def main():
 
@@ -31,6 +46,10 @@ def main():
         NUM_NODES, INIT_NUM_NODES, 
         ALPHA, BETA, GAMMA, DELTA_IN, DELTA_OUT
     )
+
+    print(f'Number of SCC: {len(graph.scc())}')
+
+    # print(f'Diameter: {graph.compute_diameter(check_inf=True)}')
 
     plot_degree_distribution(
         graph.compute_outdegree_distribution(), 
@@ -44,8 +63,11 @@ def main():
         'Indegree Distribution'
     )
 
-    confidence_factor_list = [3.0]
-    conservation_factor_list = [2.0]
+    # confidence_factor_list = [0.5, 1.0, 3.0]
+    # conservation_factor_list = [0, 0.5, 1., 3., 5.]
+
+    confidence_factor_list = [1.0]
+    conservation_factor_list = [0]
 
     for confidence_factor in confidence_factor_list:
         
@@ -69,12 +91,15 @@ def main():
 
             graph = rumour_spread.get_graph()
             outdegree = np.array(graph.compute_outdegrees())
-            init_node = np.random.choice(
-                NUM_NODES, p=outdegree / np.sum(outdegree)
-            )
+            # init_nodes = np.random.choice(
+            #     NUM_NODES, size=NUM_PROPAGATORS, 
+            #     replace=False, p=outdegree / np.sum(outdegree)
+            # )
+            init_nodes = get_center_window(outdegree, 200)
+            init_propagators = dict([(node, 0) for node in init_nodes])
 
             range_of_info_spread_list[i], opinion_freq_list[i], avg_entropy_list[i], _ = \
-                rumour_spread.simulate({init_node: 0}, TIMESTEPS, [
+                rumour_spread.simulate(init_propagators, TIMESTEPS, [
                     RangeOfInformationSpread(
                         NUM_NODES, NUM_BITS, TIMESTEPS
                     ),
@@ -85,7 +110,7 @@ def main():
                         NUM_NODES, TIMESTEPS
                     ),
                     Adversary(
-                        0, 100, 50
+                        0, 100, 500
                     )]
                 )
 
