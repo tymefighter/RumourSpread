@@ -49,7 +49,7 @@ def main():
 
     scc = graph.scc()
     print(f'Number of SCC: {len(scc)}')
-    print(f'Diameter: {graph.compute_diameter(check_inf=True)}')
+    # print(f'Diameter: {graph.compute_diameter(check_inf=True)}')
 
     plot_degree_distribution(
         graph.compute_outdegree_distribution(), 
@@ -95,7 +95,7 @@ def main():
             #     NUM_NODES, size=NUM_PROPAGATORS, 
             #     replace=False, p=outdegree / np.sum(outdegree)
             # )
-            init_nodes = get_center_window(outdegree, 200)
+            init_nodes = get_center_window(outdegree, 4)
             init_propagators = dict([(node, 0) for node in init_nodes])
 
             range_of_info_spread_list[i], opinion_freq_list[i], avg_entropy_list[i], _ = \
