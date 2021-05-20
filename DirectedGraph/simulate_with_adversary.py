@@ -20,8 +20,8 @@ NODE_CAPACITY = 320
 ALPHA = 0.010
 BETA = 0.970
 GAMMA = 0.020
-DELTA_IN = 20.0
-DELTA_OUT = 30.0
+DELTA_IN = 40.0
+DELTA_OUT = 40.0
 INIT_NUM_NODES = 100
 NUM_PROPAGATORS = 10
 TIMESTEPS = 2000
@@ -47,9 +47,9 @@ def main():
         ALPHA, BETA, GAMMA, DELTA_IN, DELTA_OUT
     )
 
-    print(f'Number of SCC: {len(graph.scc())}')
-
-    # print(f'Diameter: {graph.compute_diameter(check_inf=True)}')
+    scc = graph.scc()
+    print(f'Number of SCC: {len(scc)}')
+    print(f'Diameter: {graph.compute_diameter(check_inf=True)}')
 
     plot_degree_distribution(
         graph.compute_outdegree_distribution(), 
