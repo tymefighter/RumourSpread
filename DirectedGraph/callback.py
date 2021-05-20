@@ -108,8 +108,9 @@ class Adversary(Callback):
                 def insert_list(self, lst):
                     pass
 
-                def get_most_freq_elem(self):
-                    return self.feed_value
+                def get_most_freq_elem(self, get_all=False):
+                    
+                    return self.feed_value if not get_all else [self.feed_value]
 
                 def compute_entropy(self):
                     return 0

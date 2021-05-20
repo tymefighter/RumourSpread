@@ -1,4 +1,5 @@
 import numpy as np
+from collections import deque
 
 class Graph:
 
@@ -52,7 +53,7 @@ class Graph:
 
         return outdeg_dist
 
-    def compute_diameter(self):
+    def compute_diameter(self, check_inf=False):
 
         dp = np.full((self.n, self.n), np.inf)
 
@@ -65,6 +66,48 @@ class Graph:
                 dp, np.expand_dims(dp[:, k], axis=1) 
                 + np.expand_dims(dp[k, :], axis=0))
 
-        diameter = np.max(dp)
+        diameter = np.max(dp) if not check_inf else np.max(dp[dp != np.inf])
 
         return 'infinity' if diameter == np.inf else diameter
+
+    def dfs_rev(self, adj_rev, u, visited, dq):
+        visited[u] = True
+
+        for v in adj_rev[u]:
+            if not visited[v]:
+                self.dfs_rev(adj_rev, v, visited, dq)
+
+        dq.appendleft(u)
+
+    def dfs(self, u, visited, comp):
+        visited[u] = True
+        comp.append(u)
+
+        for v in self.adj_list[u]:
+            if not visited[v]:
+                self.dfs(v, visited, comp)
+
+    def scc(self):
+
+        adj_rev = [[] for _ in range(self.n)]
+
+        for node in range(self.n):
+            for nbr in self.adj_list[node]:
+                adj_rev[nbr].append(node)
+
+        dq = deque()
+        visited = [False for _ in range(self.n)]
+
+        for u in range(self.n):
+            if not visited[u]:
+                self.dfs_rev(adj_rev, u, visited, dq)
+
+        visited = [False for _ in range(self.n)]
+        comp_list = []
+        for u in list(dq):
+            if not visited[u]:
+                comp = []
+                comp_list.append(comp)
+                self.dfs(u, visited, comp)
+
+        return comp_list
