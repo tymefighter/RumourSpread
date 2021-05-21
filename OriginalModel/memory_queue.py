@@ -24,7 +24,8 @@ class MemoryQueue:
         return self.size == 0
 
     def get_freq_dict(self):
-        pass
+
+        return self.freq_dict
 
 
     def insert(self, x):
@@ -43,11 +44,19 @@ class MemoryQueue:
                         oldest_val = bit
 
             if oldest_val is not None:
+
                 del self.bit_lists[oldest_val][0]
+                self.freq_dict[oldest_val] -= 1
+                if self.freq_dict[oldest_val] == 0:
+                    del self.freq_dict[oldest_val]
 
             self.size -= 1
 
         self.bit_lists[x].add(self.time)
+        if x not in self.freq_dict:
+            self.freq_dict[x] = 1
+        else:
+            self.freq_dict[x] += 1
 
         self.time += 1
         self.size += 1
