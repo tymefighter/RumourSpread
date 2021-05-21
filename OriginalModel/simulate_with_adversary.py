@@ -18,15 +18,17 @@ NUM_NODES = 1000
 NUM_BITS = 5
 NODE_CAPACITY = 100
 INIT_NUM_NODES = 15
-NUM_EDGES_PER_STEP = 15
+NUM_EDGES_PER_STEP = 10
 TIMESTEPS = 1000
 
 def main():
 
     graph =  generate_scale_free(NUM_NODES, INIT_NUM_NODES, NUM_EDGES_PER_STEP)
-    degree_dist = graph.compute_degree_distribution()
-
-    plot_degree_distribution(degree_dist, 300)
+    plot_degree_distribution(
+        graph.compute_degree_distribution(), 
+        100,
+        'degree distribution', 'degree'
+    )
     print(f'Diameter {graph.compute_diameter()}')
 
     confidence_factor_list = [4.5, 3.0, 1.0]

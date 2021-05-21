@@ -66,7 +66,9 @@ class RumourSpreadModel:
             )
 
             if random() <= distortion_prob:
-                distorted_info.append(self.distort_info(most_freq_info))
+                dist_info = self.distort_info(most_freq_info)
+                node_memory.distort_in_memory(most_freq_info, dist_info)
+                distorted_info.append(dist_info)
             else:
                 distorted_info.append(most_freq_info)
 

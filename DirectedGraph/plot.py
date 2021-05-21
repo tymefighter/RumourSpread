@@ -4,15 +4,20 @@ import pandas as pd
 import numpy as np
 import math
 
-def plot_degree_distribution(degree_distribution, max_degree, title):
-    
+def plot_degree_distribution(
+    degree_distribution, max_degree, 
+    title, xlabel='degree', ylabel='frequency'
+):
     plt.plot(degree_distribution[:max_degree + 1])
     plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.show()
 
 def plot_bit_counts(
     bit_counts_list, title_list, 
-    suptitle, num_plots_per_row=2
+    suptitle, num_plots_per_row=2,
+    xlabel='', ylabel=''
 ):
     assert num_plots_per_row > 1
 
@@ -46,30 +51,40 @@ def plot_bit_counts(
             else axes[j // num_plots_per_row][j % num_plots_per_row]
         )
 
-    # fig.tight_layout()
     fig.suptitle(suptitle)
+    fig.supxlabel(xlabel)
+    fig.supylabel(ylabel)
     plt.show()
 
 def plot_range_of_info_spread(
     range_of_info_spread_list, 
     title_list, suptitle,
-    num_plots_per_row=2
+    num_plots_per_row=2,
+    xlabel='Timestep', ylabel='Binary String'
 ):  
     plot_bit_counts(range_of_info_spread_list, title_list, 
-        suptitle, num_plots_per_row)
+        suptitle, num_plots_per_row,
+        xlabel, ylabel)
 
 def plot_opinion_fragmentation(
     opinion_freq_list, 
     title_list, suptitle,
-    num_plots_per_row=2
+    num_plots_per_row=2,
+    xlabel='Timestep', ylabel='Binary String'
 ):
     plot_bit_counts(opinion_freq_list, title_list, 
-        suptitle, num_plots_per_row)
+        suptitle, num_plots_per_row,
+        xlabel, ylabel)
 
-def plot_avg_info_entropy(avg_entropy_list, label_list, title):
+def plot_avg_info_entropy(
+    avg_entropy_list, label_list, 
+    title, xlabel='Timestep', ylabel='Average Entropy'
+):
     for i in range(len(avg_entropy_list)):
         plt.plot(avg_entropy_list[i], label=label_list[i])
 
     plt.title(title)
     plt.legend()
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.show()

@@ -13,16 +13,17 @@ from plot import (
 )
 from scale_free import generate_scale_free
 
-NUM_NODES = 3000
+NUM_NODES = 1000
 NUM_BITS = 5
-NODE_CAPACITY = 320
-ALPHA = 0.03
-BETA = 0.9
-GAMMA = 0.07
+NODE_CAPACITY = 100
+ALPHA = 0.040
+BETA = 0.900
+GAMMA = 0.060
 DELTA_IN = 20.0
-DELTA_OUT = 30.0
+DELTA_OUT = 20.0
 INIT_NUM_NODES = 10
-TIMESTEPS = 500
+NUM_PROPAGATORS = 10
+TIMESTEPS = 200
 
 def main():
 
@@ -31,20 +32,24 @@ def main():
         ALPHA, BETA, GAMMA, DELTA_IN, DELTA_OUT
     )
 
+    scc = graph.scc()
+    print(f'Number of SCC: {len(scc)}')
+    print(f'Diameter: {graph.compute_diameter(check_inf=True)}')
+
     plot_degree_distribution(
         graph.compute_outdegree_distribution(), 
-        int(0.08 * NUM_NODES),
-        'Outdegree Distribution'
+        100,
+        'Out-degree Distribution', 'out-degree'
     )
 
     plot_degree_distribution(
         graph.compute_indegree_distribution(), 
-        int(0.08 * NUM_NODES),
-        'Indegree Distribution'
+        100,
+        'In-degree Distribution', 'in-degree'
     )
 
-    confidence_factor_list = [-3, 0, 1]
-    conservation_factor_list = [0, 0.5, 1.0, 3.0, 6.0, 10.0]
+    confidence_factor_list = [4.5, 3.0, 1.0]
+    conservation_factor_list = [0, 0.5, 1., 3., 6., 10.0]
 
     for confidence_factor in confidence_factor_list:
         
@@ -68,12 +73,14 @@ def main():
 
             graph = rumour_spread.get_graph()
             outdegree = np.array(graph.compute_outdegrees())
-            init_node = np.random.choice(
-                NUM_NODES, p=outdegree / np.sum(outdegree)
+            init_nodes = np.random.choice(
+                NUM_NODES, size=NUM_PROPAGATORS, 
+                replace=False, p=outdegree / np.sum(outdegree)
             )
+            init_propagators = dict([(node, 0) for node in init_nodes])
 
             range_of_info_spread_list[i], opinion_freq_list[i], avg_entropy_list[i] = \
-                rumour_spread.simulate({init_node: 0}, TIMESTEPS, [
+                rumour_spread.simulate(init_propagators, TIMESTEPS, [
                     RangeOfInformationSpread(
                         NUM_NODES, NUM_BITS, TIMESTEPS
                     ),
