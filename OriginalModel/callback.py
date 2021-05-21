@@ -14,7 +14,7 @@ class RangeOfInformationSpread(Callback):
         bit_count_list = self.bit_counts[t]
 
         for node_memory in rumour_spread.get_nodes_memory():
-            for x in node_memory.get_freq_dict().keys():
+            for _, x in node_memory.get_freq_list():
                 bit_count_list[x] += 1
 
     def get_result(self):
@@ -117,8 +117,11 @@ class Adversary(Callback):
                 def is_empty(self):
                     return False
 
-                def get_freq_dict(self):
-                    return {self.feed_value: 1}
+                def get_freq_list(self):
+                    return [(1, self.feed_value)]
+
+                def distort_in_memory(self, old_info, new_info):
+                    pass
 
             for node in target_nodes:
                 nodes_memory[node] = FixedMemory(self.feed_value)
