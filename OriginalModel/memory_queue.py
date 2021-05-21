@@ -2,7 +2,7 @@ from sortedcontainers import SortedList
 from random import choice
 from math import log2
 
-INFINITY = int(1e9)
+INFINITY = int(1e18)
 
 class MemoryQueue:
 
@@ -35,13 +35,12 @@ class MemoryQueue:
             oldest_time = INFINITY
             oldest_val = None
             
-            for bit in range(1 << self.num_bits):
+            for k in self.freq_dict.keys():
                 
-                if len(self.bit_lists[bit]) > 0:
-                    time_t =  self.bit_lists[bit][0]        
-                    if time_t < oldest_time:
-                        oldest_time = time_t
-                        oldest_val = bit
+                time_t =  self.bit_lists[k][0]        
+                if time_t < oldest_time:
+                    oldest_time = time_t
+                    oldest_val = k
 
             if oldest_val is not None:
 
@@ -50,7 +49,7 @@ class MemoryQueue:
                 if self.freq_dict[oldest_val] == 0:
                     del self.freq_dict[oldest_val]
 
-            self.size -= 1
+                self.size -= 1
 
         self.bit_lists[x].add(self.time)
         if x not in self.freq_dict:
@@ -69,8 +68,8 @@ class MemoryQueue:
     def get_most_freq_elem(self, get_all=False):
 
         max_freq = 0
-        for bit in range(1 << self.num_bits):
-            max_freq = max(max_freq, len(self.bit_lists[bit]))
+        for _, freq in self.freq_dict.items():
+            max_freq = max(max_freq, freq)
 
         most_freq_elem_list = []
         for bit in range(1 << self.num_bits):
@@ -87,9 +86,9 @@ class MemoryQueue:
 
         entropy = 0.0
 
-        for bit in range(1 << self.num_bits):
-            
-            prob = len(self.bit_lists[bit]) / self.size
+        for _, freq in self.freq_dict.items():
+
+            prob = freq / self.size
             entropy += prob * log2(prob)
 
         return -entropy
@@ -100,3 +99,12 @@ class MemoryQueue:
 
         del self.bit_lists[old_info][0]
         self.bit_lists[new_info].add(first_occ_t)
+
+        self.freq_dict[old_info] -= 1
+        if self.freq_dict[old_info] == 0:
+            del self.freq_dict[old_info]
+                    
+        if new_info not in self.freq_dict:
+            self.freq_dict[new_info] = 1
+        else:
+            self.freq_dict[new_info] += 1
