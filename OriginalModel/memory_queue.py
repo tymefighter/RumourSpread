@@ -38,7 +38,7 @@ class MemoryQueue:
             del self.bit_lists[val][0]
             
             if len(self.bit_lists[val]) > 0:
-                self.freq_list.add(len(self.bit_lists[val]), val)
+                self.freq_list.add((len(self.bit_lists[val]), val))
 
             self.size -= 1
 
@@ -59,6 +59,9 @@ class MemoryQueue:
     
     def get_most_freq_elem(self, get_all=False):
 
+        if len(self.freq_list) == 0:
+            return [] if get_all else None
+        
         max_freq = self.freq_list[-1][0]
         most_freq_elem_list = []
         
@@ -98,7 +101,9 @@ class MemoryQueue:
         self.bit_lists[new_info].add(time_old)
 
         self.freq_list.remove((freq_old, old_info))
-        self.freq_list.remove((freq_new, new_info))
+
+        if freq_new > 0:
+            self.freq_list.remove((freq_new, new_info))
 
         freq_old -= 1
         freq_new += 1
