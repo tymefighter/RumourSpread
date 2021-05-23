@@ -14,13 +14,20 @@ def plot_degree_distribution(
     plt.ylabel(ylabel)
     plt.show()
 
+def get_axis(axes, idx, num_rows, num_plots_per_row):
+
+    if num_rows == 1 and num_plots_per_row == 1:
+        return axes
+    elif num_rows == 1 or num_plots_per_row == 1:
+        return axes[idx]
+    else:
+        return axes[idx // num_plots_per_row][idx % num_plots_per_row]
+
 def plot_bit_counts(
     bit_counts_list, title_list, 
     suptitle, num_plots_per_row=2,
     xlabel='', ylabel=''
 ):
-    assert num_plots_per_row > 1
-
     num_rows = (len(bit_counts_list) + num_plots_per_row - 1) // num_plots_per_row
     fig, axes = plt.subplots(
         nrows=num_rows, ncols=num_plots_per_row, figsize=(16, 9)
@@ -28,8 +35,7 @@ def plot_bit_counts(
 
     for idx, bit_counts in enumerate(bit_counts_list):
 
-        ax = axes[idx % num_plots_per_row] if num_rows == 1 \
-            else axes[idx // num_plots_per_row][idx % num_plots_per_row]
+        ax = get_axis(axes, idx, num_rows, num_plots_per_row)
 
         num_bit_strings = len(bit_counts[0])
         num_bits = int(math.log2(num_bit_strings))
@@ -47,8 +53,7 @@ def plot_bit_counts(
 
     for j in range(idx + 1, num_rows * num_plots_per_row):
         fig.delaxes(
-            axes[j % num_plots_per_row] if num_rows == 1
-            else axes[j // num_plots_per_row][j % num_plots_per_row]
+            get_axis(axes, j, num_rows, num_plots_per_row)
         )
 
     fig.suptitle(suptitle)
