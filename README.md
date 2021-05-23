@@ -1,7 +1,7 @@
 # Information Theoretic Adversarial Approach to Rumour Spread
 
 This repository contains simulation code for the experiments
-described in our paper, [rumour_spread](rumour_spread.pdf).
+described in our paper, [rumour spread](rumour_spread.pdf).
 
 ## Running the Simulation
 
