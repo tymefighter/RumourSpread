@@ -3,6 +3,10 @@
 This repository contains simulation code for the experiments
 described in our paper, [rumour spread](rumour_spread.pdf).
 
+## Installation
+
+The necessary installation instructions are provided in [INSTALL.md](INSTALL.md).
+
 ## Running the Simulation
 
 ## Directories
