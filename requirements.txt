@@ -2,3 +2,4 @@ numpy>=1.18.5
 pandas>=1.1.4
 matplotlib>=3.4.2
 sortedcontainers>=2.4.0
+argparse>=1.1
