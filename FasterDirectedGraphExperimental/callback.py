@@ -14,7 +14,7 @@ class RangeOfInformationSpread(Callback):
         bit_count_list = self.bit_counts[t]
 
         for node_memory in rumour_spread.get_nodes_memory():
-            for x in node_memory.get_freq_dict().keys():
+            for _, x in node_memory.get_freq_list():
                 bit_count_list[x] += 1
 
     def get_result(self):
@@ -86,13 +86,13 @@ class Adversary(Callback):
 
         if self.first_run:
 
-            deg_list = rumour_spread.get_graph().compute_degrees()
-            deg_idx_list = [(deg_list, i) for i in range(len(deg_list))]
+            outdeg_list = rumour_spread.get_graph().compute_outdegrees()
+            outdeg_idx_list = [(outdeg_list, i) for i in range(len(outdeg_list))]
 
-            sorted(deg_idx_list, key=lambda x: x[0], reverse=True)
+            sorted(outdeg_idx_list, key=lambda x: x[0], reverse=True)
 
             target_nodes = [
-                deg_idx_list[i][1] for i in range(self.num_target_nodes)
+                outdeg_idx_list[i][1] for i in range(self.num_target_nodes)
             ]
 
             nodes_memory = rumour_spread.get_nodes_memory()
@@ -117,8 +117,11 @@ class Adversary(Callback):
                 def is_empty(self):
                     return False
 
-                def get_freq_dict(self):
-                    return {self.feed_value: 1}
+                def get_freq_list(self):
+                    return [(1, self.feed_value)]
+
+                def distort_in_memory(self, old_info, new_info):
+                    pass
 
                 def distort_in_memory(self, old_value, new_value):
                     pass

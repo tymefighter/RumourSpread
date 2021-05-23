@@ -17,7 +17,7 @@ class RumourSpreadModel:
             num_nodes, init_num_nodes, num_edges_per_step
         )
         self.nodes_memory = [
-            MemoryQueue(num_bits, node_capacity) for _ in range(num_nodes)
+            MemoryQueue(node_capacity) for _ in range(num_nodes)
         ]
 
     def get_graph(self):
