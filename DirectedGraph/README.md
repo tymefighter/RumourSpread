@@ -42,6 +42,21 @@ This directory contains the codes for the simulation of the directed graph versi
 
 -   `plot.py`: This file is same as [OriginalModel/plot.py](../OriginalModel/plot.py), 
     and the description can be found here: [OriginalModel/README.md](../OriginalModel/README.md).
+    
+-   `simulate.py` : This file is same as [OriginalModel/simulate.py](../OriginalModel/simulate.py)
+    but with some extra parameters used to generate directed scale-free graph. The description
+    is at [OriginalModel/README.md](../OriginalModel/README.md).
+    
+-   `simulate_with_adversary.py` : This file similar to the above the file but it also introduces
+    adversary and finally generates the plots. This was also used to get the results which we wrote 
+    in the paper.
+    
+-   `simulate_single.py` : This file takes conservation factor, confidence factor and number of
+    adversary nodes as arguments and produces the `RangeOfInformationSpread`, 
+    `OpinionFragmentation` and `Average Information Entropy` plots. This file is same as
+    [OriginalModel/simulate_single.py](../OriginalModel/simulate_single.py) and 
+    the description is in [OriginalModel/README.md](../OriginalModel/README.md).
+
 
 Observation: The file descriptions given in this markdown are presented in a
 topological order of the dependency graph of these files.
