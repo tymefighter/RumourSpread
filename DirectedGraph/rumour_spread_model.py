@@ -22,7 +22,7 @@ class RumourSpreadModel:
             delta_in, delta_out
         )
         self.nodes_memory = [
-            MemoryQueue(node_capacity) for _ in range(num_nodes)
+            MemoryQueue(num_bits, node_capacity) for _ in range(num_nodes)
         ]
 
         if plot_degree_dist:
