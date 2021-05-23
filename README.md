@@ -30,7 +30,7 @@ python simulate.py -o -g
 
 2. Running the Original Model with parameters
 ```
-python simulate.py -cons 0.5 -conf 4.5 -numadv 10
+python simulate.py -o -cons 0.5 -conf 4.5 -numadv 10
 ```
 
 3.  Running the Directed Graph Model with Adversary
