@@ -23,7 +23,7 @@ TIMESTEPS = 1000
 
 def main():
 
-    graph =  generate_scale_free(NUM_NODES, INIT_NUM_NODES, NUM_EDGES_PER_STEP)
+    graph = generate_scale_free(NUM_NODES, INIT_NUM_NODES, NUM_EDGES_PER_STEP)
     plot_degree_distribution(
         graph.compute_degree_distribution(), 
         100,
@@ -34,7 +34,6 @@ def main():
     confidence_factor_list = [4.5, 3.0, 1.0]
     conservation_factor_list = [0, 0.5, 1.0, 3.0, 6.0, 10.0]
 
-    # Curr Best: K = 1.0, β = 4.5
     for confidence_factor in confidence_factor_list:
         
         m = len(conservation_factor_list)

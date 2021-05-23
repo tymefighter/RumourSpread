@@ -93,3 +93,11 @@ def plot_avg_info_entropy(
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.show()
+
+def plot_histogram(val_arr, bins, title, xlabel, ylabel):
+
+    plt.hist(val_arr, bins)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.show()

@@ -3,7 +3,50 @@
 This repository contains simulation code for the experiments
 described in our paper, [rumour spread](rumour_spread.pdf).
 
+## Installation
+
+The necessary installation instructions are provided in [INSTALL.md](INSTALL.md).
+
 ## Running the Simulation
+
+The simulation file is [simulation.py](simulation.py), it can be run using
+a python interpretor. There are many command line arguments or flags which can 
+be passed to this file.
+
+### Help
+
+One can pass the `-h` flag as a command line argument while running this file
+to get information about all the arguments that this file supports.
+```
+python simulate.py -h
+```
+
+### A set of example uses are shown below:
+
+1. Running the Original Model without Adversary
+```
+python simulate.py -o -g
+```
+
+2. Running the Original Model with parameters
+```
+python simulate.py -o -cons 0.5 -conf 4.5 -numadv 10
+```
+
+3.  Running the Directed Graph Model with Adversary
+```
+python simulate.py -d -ga
+```
+
+4. Running the Directed Graph Model with Adversary
+```
+python simulate.py --directed --general-adversary
+```
+
+5. Running the Node and Edge Information Computation
+```
+python simulate.py --information -cons 1 -conf 3 -numadv 10
+```
 
 ## Directories
 
