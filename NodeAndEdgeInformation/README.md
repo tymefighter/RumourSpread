@@ -30,6 +30,3 @@ The directory content is described as follows:
 
 -   `callbacks.py`: This file is the same as [DirectedGraph/callbacks.py](../DirectedGraph/callbacks.py), 
     and is it is described in detail in [DirectedGraph/README.md](../DirectedGraph/README.md).
-
--   `plot.py`: This file is the same as [OriginalModel/plot.py](../OriginalModel/plot.py), 
-    and is it is described in detail in [OriginalModel/README.md](../OriginalModel/README.md).
