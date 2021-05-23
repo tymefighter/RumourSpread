@@ -109,7 +109,6 @@ class Adversary(Callback):
                     pass
 
                 def get_most_freq_elem(self, get_all=False):
-                    
                     return self.feed_value if not get_all else [self.feed_value]
 
                 def compute_entropy(self):
@@ -120,6 +119,9 @@ class Adversary(Callback):
 
                 def get_freq_dict(self):
                     return {self.feed_value: 1}
+
+                def distort_in_memory(self, old_value, new_value):
+                    pass
 
             for node in target_nodes:
                 nodes_memory[node] = FixedMemory(self.feed_value)

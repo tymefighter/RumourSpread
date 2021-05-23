@@ -14,31 +14,17 @@ from plot import (
 )
 from scale_free import generate_scale_free
 
-NUM_NODES = 3000
+NUM_NODES = 1000
 NUM_BITS = 5
-NODE_CAPACITY = 320
-ALPHA = 0.010
-BETA = 0.970
-GAMMA = 0.020
-DELTA_IN = 40.0
-DELTA_OUT = 40.0
-INIT_NUM_NODES = 100
+NODE_CAPACITY = 100
+ALPHA = 0.040
+BETA = 0.900
+GAMMA = 0.060
+DELTA_IN = 20.0
+DELTA_OUT = 20.0
+INIT_NUM_NODES = 10
 NUM_PROPAGATORS = 10
-TIMESTEPS = 2000
-
-def get_center_window(outdegrees, window_size):
-
-    outdegree_pairs = list(enumerate(outdegrees))
-    sorted(outdegree_pairs, key=lambda x: x[0])
-
-    n = len(outdegree_pairs)
-    center_idx = n // 2
-
-    return [
-        node for _, node in 
-        outdegree_pairs[max(center_idx - window_size, 0): 
-            min(center_idx + window_size, n - 1)]
-    ]
+TIMESTEPS = 1000
 
 def main():
 
@@ -63,11 +49,8 @@ def main():
         'Indegree Distribution'
     )
 
-    # confidence_factor_list = [0.5, 1.0, 3.0]
-    # conservation_factor_list = [0, 0.5, 1., 3., 5.]
-
-    confidence_factor_list = [1.0]
-    conservation_factor_list = [0]
+    confidence_factor_list = [4.5, 3.0, 1.0]
+    conservation_factor_list = [0, 0.5, 1., 3., 5.]
 
     for confidence_factor in confidence_factor_list:
         
@@ -91,11 +74,10 @@ def main():
 
             graph = rumour_spread.get_graph()
             outdegree = np.array(graph.compute_outdegrees())
-            # init_nodes = np.random.choice(
-            #     NUM_NODES, size=NUM_PROPAGATORS, 
-            #     replace=False, p=outdegree / np.sum(outdegree)
-            # )
-            init_nodes = get_center_window(outdegree, 4)
+            init_nodes = np.random.choice(
+                NUM_NODES, size=NUM_PROPAGATORS, 
+                replace=False, p=outdegree / np.sum(outdegree)
+            )
             init_propagators = dict([(node, 0) for node in init_nodes])
 
             range_of_info_spread_list[i], opinion_freq_list[i], avg_entropy_list[i], _ = \
@@ -110,7 +92,7 @@ def main():
                         NUM_NODES, TIMESTEPS
                     ),
                     Adversary(
-                        0, 100, 500
+                        0, 10, 500
                     )]
                 )
 

@@ -1,4 +1,4 @@
-from rumour_spread_model import RumourSpreadModel, Callback
+from rumour_spread_info_extract import RumourSpreadModel, Callback
 
 class RangeOfInformationSpread(Callback):
 
@@ -86,13 +86,13 @@ class Adversary(Callback):
 
         if self.first_run:
 
-            deg_list = rumour_spread.get_graph().compute_degrees()
-            deg_idx_list = [(deg_list, i) for i in range(len(deg_list))]
+            outdeg_list = rumour_spread.get_graph().compute_outdegrees()
+            outdeg_idx_list = [(outdeg_list, i) for i in range(len(outdeg_list))]
 
-            sorted(deg_idx_list, key=lambda x: x[0], reverse=True)
+            sorted(outdeg_idx_list, key=lambda x: x[0], reverse=True)
 
             target_nodes = [
-                deg_idx_list[i][1] for i in range(self.num_target_nodes)
+                outdeg_idx_list[i][1] for i in range(self.num_target_nodes)
             ]
 
             nodes_memory = rumour_spread.get_nodes_memory()

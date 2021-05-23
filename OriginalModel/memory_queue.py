@@ -1,4 +1,4 @@
-from collections import deque
+from queue_distort import Queue
 from random import choice
 from math import log2
 
@@ -6,7 +6,7 @@ class MemoryQueue:
 
     def __init__(self, capacity):
         
-        self.deque = deque()
+        self.queue = Queue()
         self.capacity = capacity
         self.size = 0
         self.freq_dict = dict()
@@ -26,7 +26,7 @@ class MemoryQueue:
     def insert(self, x):
 
         if self.size == self.capacity:
-            y = self.deque.popleft()
+            y = self.queue.dequeue()
 
             self.freq_dict[y] -= 1
             if self.freq_dict[y] == 0:
@@ -39,7 +39,7 @@ class MemoryQueue:
         else:
             self.freq_dict[x] += 1
 
-        self.deque.append(x)
+        self.queue.enqueue(x)
         self.size += 1
 
     def insert_list(self, lst):
@@ -74,3 +74,17 @@ class MemoryQueue:
             entropy += prob * log2(prob)
 
         return -entropy
+
+    def distort_in_memory(self, old_value, new_value):
+        
+        self.queue.update_first_occ(old_value, new_value)
+
+        self.freq_dict[old_value] -= 1
+        if self.freq_dict[old_value] == 0:
+            del self.freq_dict[old_value]
+
+        
+        if new_value not in self.freq_dict:
+            self.freq_dict[new_value] = 1
+        else:
+            self.freq_dict[new_value] += 1

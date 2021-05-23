@@ -1,17 +1,15 @@
 from random import randint, random
-
+from math import log2
 from memory_queue import MemoryQueue
 from prob import Prob
 from scale_free import generate_scale_free
-from plot import plot_degree_distribution
 
 class RumourSpreadModel:
 
     def __init__(
         self, num_nodes, num_bits, node_capacity, 
         conservation_factor, confidence_factor,
-        init_num_nodes, alpha, beta, gamma, delta_in, delta_out,
-        plot_degree_dist=False
+        init_num_nodes, alpha, beta, gamma, delta_in, delta_out
     ):
         self.num_nodes = num_nodes
         self.num_bits = num_bits
@@ -24,19 +22,6 @@ class RumourSpreadModel:
         self.nodes_memory = [
             MemoryQueue(node_capacity) for _ in range(num_nodes)
         ]
-
-        if plot_degree_dist:
-            plot_degree_distribution(
-                self.scale_free_graph.compute_outdegree_distribution(), 
-                int(0.08 * num_nodes),
-                'Outdegree Distribution'
-            )
-
-            plot_degree_distribution(
-                self.scale_free_graph.compute_indegree_distribution(), 
-                int(0.08 * num_nodes),
-                'Indegree Distribution'
-            )
 
     def get_graph(self):
 
@@ -102,7 +87,18 @@ class RumourSpreadModel:
                 )
 
                 if random() <= acceptance_prob:
-                    self.nodes_memory[nbr].insert(buffer_info[node])
+                    info = buffer_info[node]
+                    self.nodes_memory[nbr].insert(info)
+                
+                else:
+                    info = -1
+
+                if self.edge_info_freq is not None:
+                    edge = (node, nbr)
+                    if info not in self.edge_info_freq[edge]:
+                        self.edge_info_freq[edge][info] = 1
+                    else:
+                        self.edge_info_freq[edge][info] += 1
 
     def inject_info(self, info_propagators):
 
@@ -113,17 +109,67 @@ class RumourSpreadModel:
 
         distorted_info = self.get_distorted_info()
         self.update_node_memory(distorted_info)
+
+    def compute_entropy(self, val_freq):
+        entropy = 0.0
+        total_sum = sum(val_freq.values())
+
+        for freq in val_freq.values():
+            prob = freq / total_sum
+            entropy -= prob * log2(prob)
+
+        return entropy
         
-    def simulate(self, info_propagators, time_steps, callback_list):
+    def simulate(self, info_propagators, time_steps, callback_list,
+        node_info_timestep_list, edge_info_timerange_list):
+
+        node_info_timestep_list.reverse()
+        edge_info_timerange_list.reverse()
+
+        node_entropy_list = []
+        edge_entropy_list = []
+        self.edge_info_freq = None
 
         self.inject_info(info_propagators)
         for t in range(time_steps):
+            if len(node_info_timestep_list) > 0 \
+                and node_info_timestep_list[-1] == t:
+
+                node_entropies = []
+                for node_memory in self.nodes_memory:
+                    node_entropies.append(node_memory.compute_entropy())
+
+                node_entropy_list.append(node_entropies)
+                node_info_timestep_list.pop()
+
+            self.t = t
+            if len(edge_info_timerange_list) > 0:
+                if edge_info_timerange_list[-1][0] == t:
+
+                    self.edge_info_freq = dict()
+                    for edge in self.scale_free_graph.get_edge_list():
+                        self.edge_info_freq[edge] = dict()
+
+                    self.t_start, self.t_end = edge_info_timerange_list[-1]
+
+                elif edge_info_timerange_list[-1][1] == t:
+
+                    edge_entropies = []
+                    for val_freq in self.edge_info_freq.values():
+                        edge_entropies.append(self.compute_entropy(val_freq))
+
+                    edge_entropy_list.append(edge_entropies)
+                    edge_info_timerange_list.pop()
+
+                    self.edge_info_freq = None
+
             self.simulate_step()
 
             for callback in callback_list:
                 callback.call_after_step(self, t)
-
-        return [callback.get_result() for callback in callback_list]
+    
+        return [callback.get_result() for callback in callback_list], \
+            node_entropy_list, edge_entropy_list
 
 class Callback:
 
