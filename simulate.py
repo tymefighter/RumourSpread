@@ -10,20 +10,25 @@ def build_parser():
 
     # Experiment Selection Arguments
     parser.add_argument('-o', '--original', dest='original',
+        action='store_true',
         help='Run Original Model')
 
     parser.add_argument('-d', '--directed', dest='directed',
+        action='store_true',
         help='Run Directed Graph Model')
 
     parser.add_argument('-i', '--information', dest='information',
+        action='store_true',
         help='Run Node and Edge Information Entropy Computation')
 
     # Sub-Experiment or Experiment Parameter Selection Arguments
     parser.add_argument('-g', '--general', dest='general',
+        action='store_true',
         help='Runs a general experiment - ' 
         + 'no specific values are to be provided here')
 
-    parser.add_argument('-ga', '--general-adversary', dest='general_adversary',
+    parser.add_argument('-ga', '--general-adversary', 
+        dest='general_adversary', action='store_true',
         help='Run a general adversary experiment - '
         + 'no specific values are to be provided here')
 
