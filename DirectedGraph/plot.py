@@ -57,8 +57,8 @@ def plot_bit_counts(
         )
 
     fig.suptitle(suptitle)
-    fig.supxlabel(xlabel)
-    fig.supylabel(ylabel)
+    fig.text(0.5, 0.04, xlabel, ha='center')
+    fig.text(0.04, 0.5, ylabel, va='center', rotation='vertical')
     plt.show()
 
 def plot_range_of_info_spread(
