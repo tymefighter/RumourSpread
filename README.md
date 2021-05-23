@@ -21,3 +21,6 @@ described in our paper, <!-- [rumour_spread](rumour_spread.pdf) -->.
 -   The documents relevant to our experimentation are provided in
     the `Documents` directory of this repository.
 
+-   A faster experimental version of the simulation algorithm is
+    present in the `FasterDirectedGraphExperimental` directory
+    of this repository.
