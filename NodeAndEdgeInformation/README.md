@@ -30,3 +30,8 @@ The directory content is described as follows:
 
 -   `callbacks.py`: This file is the same as [DirectedGraph/callbacks.py](../DirectedGraph/callbacks.py), 
     and is it is described in detail in [DirectedGraph/README.md](../DirectedGraph/README.md).
+    
+-   `simulate_info_extract.py` : This file takes conservation factor, confidence factor and number
+    of adversary nodes as arguments and produces the `RangeOfInformationSpread`, 
+    `OpinionFragmentation`, `Average Information Entropy`, `Node Entropy Distribution` and 
+    `Edge Entropy Distribution` plots.

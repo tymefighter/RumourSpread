@@ -52,6 +52,19 @@ The directory content is described as follows:
 -   `plot.py`: This file contains code for several useful plotting functions - functions
     which plot the results produced by the `RangeOfInformationSpread`, `OpinionFragmentation`
     and `Adversary` callbacks.
+    
+-   `simulate.py` : This file contains some predefined parameters like num of nodes, confidence 
+    factor, total time steps, etc and plots the `RangeOfInformationSpread`, `OpinionFragmentation`
+    and `Average Information Entropy` graphs with several combinations of confidence factor and
+    conservation factors. This was used to get the results which we wrote in the paper.
+    
+-   `simulate_with_adversary.py` : This file similar to the above the file but it also introduces
+    adversary and finally generates the plots. This was also used to get the results which we wrote 
+    in the paper.
+    
+-   `simulate_single.py` : This file takes conservation factor, confidence factor and number of
+    adversary nodes as arguments and produces the `RangeOfInformationSpread`, 
+    `OpinionFragmentation` and `Average Information Entropy` plots.
 
 Just an observation: The file descriptions given in this markdown are presented in a
 topological order of the dependency graph of these files.
